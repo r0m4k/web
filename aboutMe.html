@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page name -->
+    <title>aboutMe</title>
+    <!-- Favicon -->
+    <link rel="icon" href="assets/Images/favicon.ico" type="image/x-icon">
+
+    <!-- LOAD OF ALL NECESSARY SCRIPT FILES-->
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap default JS  -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script defer src="assets/js/script.js"></script>
+
+    <!-- Script for color theme change (added here for faster load) --> 
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+        })();
+    </script>
+
+    <!-- LOAD OF ALL NECESSARY CSS FILES-->
+    <!-- Bootstrap default CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap default Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- LOAD OF ALL NECESSARY FONTS-->
+    <!-- Google default Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Load navbar with JS -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Load fractal tree canvas with JS-->
+    <canvas id="fractal-tree-canvas"></canvas>
+
+    <!-- Main page container -->
+    <main class="container mt-5 pt-5 main-flush-top">
+
+        <!-- About me section -->
+        <section id="about" class="page-section">
+
+            <!-- The page title -->
+            <h2 class="section-title">aboutMe</h2>
+
+            <!-- The content of the page -->
+            <div class="row justify-content-center align-items-center profile-content" style="margin-left: 0">
+
+                <!-- Avatar image -->
+                <div class="col-lg-4 col-md-8 col-sm-10 text-center mb-4">
+                    <img src="assets/Images/avatar.png" class="img-fluid rounded-circle" alt="Your Photo">
+                </div>
+
+                <!-- Bio section -->
+                <div class="col-lg-8">
+                    <p style="text-align: justify">I am a Deep Learning researcher and an engineer focusing on LLM Agents. I come from Cybersecurity background, what makes me detailed to reliability and safety of designed systems.</p>
+                    <p style="text-align: justify">My inspiration source is nature with its optimization algorithms (biological & information evolutions) and its infinite detalization (continues sampling rate). The fractal tree at the backround symbolizes exactly that (btw, every time you load the page - the tree regenerates).</p>
+                    <p style="text-align: justify">Aside from research and coding I'm deeply into martial arts, meditation, hikes, history, art and architecture.</p>
+                </div>
+                
+
+                <!-- Links to socical accounts -->
+                <div class="col-12 social-icons-contact mt-3">
+                    <p style="text-align: justify; justify-self: center;">r.dolgopolyi@acg.edu</p>
+                    <a href="https://github.com/r0m4k" aria-label="GitHub" target="_blank">
+                        <i class="bi bi-github"></i>
+                    </a>
+                    <a href="https://t.me/sendamessagetoroman" aria-label="Telegram" target="_blank">
+                        <i class="bi bi-telegram"></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Load footer with JS -->
+    <div id="footer-placeholder"></div>
+
+</body>
+</html>

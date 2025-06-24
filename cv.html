@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page name -->
+    <title>CV</title>
+    <!-- Favicon -->
+    <link rel="icon" href="assets/Images/favicon.ico" type="image/x-icon">
+
+    <!-- LOAD OF ALL NECESSARY SCRIPT FILES-->
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap default JS  -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script defer src="assets/js/script.js"></script>
+
+    <!-- Script for color theme change (added here for faster load) --> 
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+        })();
+    </script>
+
+    <!-- LOAD OF ALL NECESSARY CSS FILES-->
+    <!-- Bootstrap default CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap default Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/about-mobile.css">
+
+    <!-- LOAD OF ALL NECESSARY FONTS-->
+    <!-- Google default Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Load navbar with JS -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Main page container -->
+    <main class="container mt-5 pt-5 main-flush-top">
+        <section id="cv-content" class="page-section">
+
+            <!-- The page title -->
+            <h2 class="section-title">curriculumVitae</h2>
+
+            <!-- Experience section -->
+            <div class="mb-5">
+                <h4>Experience</h4>
+                <hr>
+
+                <!-- Experience #1 -->
+                <div class="mb-4">
+                    <h5>Researcher Laboratory Assistant | SWIFT Lab. - The American College of Greece</h5>
+                    <p class="text-muted"><em>May 2024 – September 2024</em></p>
+                    <ul>
+                        <li>Signal processing of wireless communication systems</li>
+                        <li>Radio signals classification with Deep Learning approaches</li>
+                        <li>Collaboration with faculty and students on research projects</li>
+                        <li>Preparation & presentation of research progress reports</li>
+                    </ul>
+                </div>
+
+                <!-- Experience #2 -->
+                <div class="mb-4">
+                    <h5>Machine Learning / Deep Learning Engineer | Freelance</h5>
+                    <p class="text-muted"><em>October 2023 – Today</em></p>
+                    <ul>
+                        <li>Create ML/DL solutions for prediction and classification tasks</li>
+                        <li>Large Language Models (LLMs) training / post-training / fine-tuning </li>
+                        <li>Alignment and creation of Agentic and Multi-Agentic workflows</li>
+                    </ul>
+                </div>
+
+                <!-- Experience #3 -->
+                <div class="mb-4">
+                    <h5>Programming Teacher & CS Program Coordinator | StepByStep School</h5>
+                    <p class="text-muted"><em>June 2023 – Today</em></p>
+                    <ul>
+                        <li>Prepare students for A-Level & GCSE Computer Science exams</li>
+                        <li>Integration of Artificial Intelligence practices in school activities</li>
+                        <li>Design and implement curriculum for programming courses</li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <!-- Education section -->
+            <div class="mb-5">
+                <h4>Education</h4>
+
+                <!-- Education #1 -->
+                <div class="mb-4">
+                <hr>
+                    <h5>Bachelor of Science in Cybersecurity & Networks | The American College of Greece | Athens, Greece</h5>
+                    <p class="text-muted">
+                        <em>Graduation: May 2026</em><br>
+                        <em>GPA: 3.76</em>
+                    </p>
+                </div>
+
+                <!-- Education #2 -->
+                <div class="mb-4">
+                    <h5>Summer School in Machine Learning | University Of Oxford | London, England & Online</h5>
+                    <p class="text-muted">
+                        <em>Summer 2025</em>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Research interests section -->
+            <div class="mb-5">
+                <h4>Research Interests</h4>
+                <hr>
+                <!-- Interest #1 -->
+                <h6>Development of Secure Artificial Intelligence Systems</h6>
+                <!-- Interest #2 -->
+                <h6>Interpretability of Deep Learning Models</h5>
+                <!-- Interest #3 -->
+                <h6>Security Assesment of Large Language Models</h6>
+                <!-- Interest #4 -->
+                <h6>Machine Learning and Deep Learning for Cybersecurity tasks</h6>
+            </div>
+
+            <!-- Research interests section -->
+            <div class="mb-5">
+                <h4>Research Papers:</h4>
+                <hr>
+                <p class="text-muted"><em>Published:</em></p>
+                <!-- Loading animation for papers -->
+                <div class="d-flex align-items-center text-muted mb-3">
+                    <div class="spinner-border me-2" role="status" aria-hidden="true" style="animation-duration: 1.5s;"></div>
+                    <small><em>Papers coming soon...</em></small>
+                </div>
+                
+                <p class="text-muted"><em>Preprints:</em></p>
+                    <div class="spinner-border me-2" role="status" aria-hidden="true" style="animation-duration: 1.5s;"></div>
+                    <small><em>Papers coming soon...</em></small>
+            </div>
+
+            <!-- Certificates section-->
+            <div class="mb-5">
+                <h4>Certifications</h4>
+                <hr>
+                    <!-- Certificate #1 -->
+                    <h6 class="text-muted">Machine Learning & Deep Learning | Stanford University</h6>
+                    <!-- Certificate #2 -->
+                    <h6 class="text-muted">Mathematics for Machine Learning | Stanford University</h6>
+                    <!-- Certificate #3 -->
+                    <h6 class="text-muted">Computer Science for Artificial Intelligence | Harvard University</h5>
+                    <!-- Certificate #4 -->
+                    <h6 class="text-muted">Large Language Models & Agents | Hugging Face</h6>
+                    <!-- Certificate #5 -->
+                    <h6 class="text-muted">Generative Artificial Intelligence | Microsoft</h6>
+                    <!-- Certificate #6 -->
+                    <h6 class="text-muted">Cybersecurity Operations | Google</h6>
+            </div>
+
+            <!-- Skills section -->
+            <div>
+                <h4>Skills</h4>
+                <hr>
+                <div class="row">
+                    <!-- Soft skills -->
+                    <div class="col-md-6">
+                        <h5>Technical:</h5>
+                        <ul>
+                            <li>Programming Languages: Python, MathLab, C/C++, Java </li>
+                            <li>Data Managment & Version Control : MySQL, LightSQL, Git, Docker</li>
+                        </ul>
+                    </div>
+
+                    <!-- Technical skills -->
+                    <div class="col-md-6">
+                        <h5>Soft:</h5>
+                        <ul>
+                            <li>Problem-Solving</li>
+                            <li>Communication & Team Collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Load footer with JS -->
+    <div id="footer-placeholder"></div>
+
+</body>
+</html>
+
