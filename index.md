@@ -1,1 +1,1 @@
-redirect_to: /home/
+redirect_to: /aboutMe.html/
