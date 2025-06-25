@@ -791,3 +791,14 @@ main {
         padding-top: 1.5rem;
     }
 }
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    body {
+        min-height: -webkit-fill-available;
+    }
+    
+    html {
+        height: -webkit-fill-available;
+    }
+}
