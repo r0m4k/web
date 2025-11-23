@@ -92,9 +92,33 @@ function initializeNavbarFeatures() {
             setTheme(newTheme);
         });
 
+        // Determine initial theme: saved preference > system preference > default (light)
         const savedTheme = localStorage.getItem('theme');
-        const initialHtmlTheme = $htmlElement.attr('data-bs-theme') || 'light';
-        setTheme(savedTheme || initialHtmlTheme); // Apply saved theme or initial HTML theme
+        let initialTheme;
+        
+        if (savedTheme) {
+            // User has previously set a preference
+            initialTheme = savedTheme;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // System/device prefers dark mode
+            initialTheme = 'dark';
+        } else {
+            // Default to light mode
+            initialTheme = 'light';
+        }
+        
+        setTheme(initialTheme);
+        
+        // Listen for system theme changes (only if user hasn't set a preference)
+        if (window.matchMedia) {
+            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            darkModeMediaQuery.addEventListener('change', (e) => {
+                // Only auto-update if user hasn't manually set a preference
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
 
     } else {
         if (!$themeToggler.length) console.warn("Theme toggler button (id: theme-toggler) not found.");
@@ -122,6 +146,57 @@ function initializeNavbarFeatures() {
         // console.warn("No navigation links found for active link highlighting. This might be a timing issue or an error.");
     }
 
+    // --- Smooth Scrolling for Anchor Links ---
+    $('a[href*="#"]').on('click', function(e) {
+        const href = $(this).attr('href');
+        const $clickedLink = $(this);
+        
+        // Check if the link contains a hash
+        if (href && href.includes('#')) {
+            const [page, hash] = href.split('#');
+            const currentPage = window.location.pathname.split("/").pop() || 'index.html';
+            
+            // If linking to an anchor on the current page or index.html
+            if (!page || page === currentPage || (page === 'index.html' && (currentPage === '' || currentPage === 'index.html'))) {
+                e.preventDefault();
+                
+                // 1. IMMEDIATE: Update active state on click (if it's a nav link)
+                if ($clickedLink.hasClass('nav-link')) {
+                    $navLinks.removeClass('active');
+                    $clickedLink.addClass('active');
+                }
+                
+                // Get navbar height for offset
+                const navbarHeight = $('.navbar').outerHeight() || 70;
+                
+                // Special handling for "about" section - scroll to top
+                if (hash === 'about') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const target = document.getElementById(hash);
+                    if (target) {
+                        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+                        const offsetPosition = targetPosition - navbarHeight - 20; // 20px extra padding
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+                
+                // Close mobile menu if open
+                const $navbarCollapse = $('#navbarNav');
+                if ($navbarCollapse.hasClass('show')) {
+                    const bsCollapse = bootstrap.Collapse.getInstance($navbarCollapse[0]);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    }
+                }
+            }
+        }
+    });
+
     // --- Navbar Dropdown Close on Outside Click ---
     const $navbarCollapse = $('#navbarNav');
     
@@ -135,6 +210,62 @@ function initializeNavbarFeatures() {
             }
         });
     }
+
+    // --- Scroll Spy for Active Section Highlighting ---
+    const sections = ['about', 'publications', 'projects', 'cv'];
+    let lastActiveSection = '';
+    
+    function updateActiveNavLink() {
+        // Get the center of the screen
+        const scrollPosition = $(window).scrollTop();
+        const windowHeight = $(window).height();
+        const screenCenter = scrollPosition + (windowHeight / 2);
+        
+        // Find which section contains the center of the screen
+        let currentSection = '';
+        
+        sections.forEach(sectionId => {
+            const $section = $(`#${sectionId}`);
+            if ($section.length) {
+                const sectionTop = $section.offset().top;
+                const sectionBottom = sectionTop + $section.outerHeight();
+                
+                // Check if screen center is within this section
+                if (screenCenter >= sectionTop && screenCenter < sectionBottom) {
+                    currentSection = sectionId;
+                }
+            }
+        });
+        
+        // Update active class only if the section changed
+        if (currentSection && currentSection !== lastActiveSection) {
+            lastActiveSection = currentSection;
+            
+            $navLinks.each(function() {
+                const $link = $(this);
+                const href = $link.attr('href');
+                
+                // Check if this link points to the current section
+                if (href && href.includes(`#${currentSection}`)) {
+                    $link.addClass('active');
+                } else {
+                    $link.removeClass('active');
+                }
+            });
+        }
+    }
+    
+    // Run on scroll with throttling
+    let scrollTimeout;
+    $(window).on('scroll.navspy', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(updateActiveNavLink, 50);
+    });
+    
+    // Run on page load
+    setTimeout(updateActiveNavLink, 100);
 }
 
 /**
@@ -495,6 +626,9 @@ $(document).ready(function () {
                 $item.removeClass(function(index, className) {
                     return (className.match(/(^|\s)c-item-\S+/g) || []).join(' ');
                 });
+                
+                // Reset any inline opacity styles to prevent accumulation
+                $item.css('opacity', '');
 
                 let diff = i - activeIndex;
 

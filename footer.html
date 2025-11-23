@@ -1,5 +1,9 @@
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2025 Roman Dolgopolyi.</p>
+        <p>&copy; <span id="current-year"></span> Roman Dolgopolyi.</p>
     </div>
 </footer>
+
+<script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>

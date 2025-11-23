@@ -67,7 +67,16 @@ main {
 /* Page content sections style */
 .page-section {
     padding: 60px 0;
-    display: block; 
+    display: block;
+    scroll-margin-top: 90px; /* Account for navbar height + padding */
+}
+
+/* Scroll offset for section IDs to account for fixed navbar */
+#about,
+#publications,
+#projects,
+#cv {
+    scroll-margin-top: 90px;
 }
 
 /* Section titles style */
@@ -185,34 +194,34 @@ main {
 /* Style for the chosen card in the carousel (centered) */
 #projectCarousel .carousel-item.c-item-active {
     transform: translateX(0%) translateZ(0px) scale(1);
-    opacity: 1;
+    opacity: 1 !important;
     z-index: 5;
 }
 
 /* Style for the first card on the left from the center */
 #projectCarousel .carousel-item.c-item-next-1 {
     transform: translateX(40%) translateZ(-200px) rotateY(-30deg) scale(0.8);
-    opacity: 0.6;
+    opacity: 1 !important;
     z-index: 4;
 }
 
 /* Style for the first card on the right from the center */
 #projectCarousel .carousel-item.c-item-prev-1 {
     transform: translateX(-40%) translateZ(-200px) rotateY(30deg) scale(0.8);
-    opacity: 0.6;
+    opacity: 1 !important;
     z-index: 4;
 }
 /* Style for the second card on the left from the center */
 #projectCarousel .carousel-item.c-item-next-2 {
     transform: translateX(75%) translateZ(-400px) rotateY(-40deg) scale(0.65);
-    opacity: 0.3;
+    opacity: 1 !important;
     z-index: 3;
 }
 
 /* Style for the second card on the right from the center */
 #projectCarousel .carousel-item.c-item-prev-2 {
     transform: translateX(-75%) translateZ(-400px) rotateY(40deg) scale(0.65);
-    opacity: 0.3;
+    opacity: 1 !important;
     z-index: 3;
 }
 
@@ -228,13 +237,17 @@ main {
     z-index: 10;
     width: auto; 
     left: 10px;
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 /* Style for the right carousel button */
 #projectCarousel .carousel-control-next {
     z-index: 10;
-    width: auto; /* Adjust if needed */
+    width: auto;
     right: 10px;
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 /* Style to make the style of cards coherent */
@@ -245,23 +258,28 @@ main {
 }
 
 /* Style for the carousel buttons to make them more visible */
-#projectCarousel .bi-chevron-right,
-#projectCarousel .bi-chevron-left {
-    color: #000000; 
-    transform: scale(2)
+#projectCarousel .carousel-control-prev .bi-chevron-left,
+#projectCarousel .carousel-control-next .bi-chevron-right {
+    color: #0d6efd !important; 
+    transform: scale(2);
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 /* Style for buttons in carousel in dark mode */
-[data-bs-theme="dark"] #projectCarousel .bi-chevron-right,
-[data-bs-theme="dark"] #projectCarousel .bi-chevron-left {
-    color: #ffffff; 
+[data-bs-theme="dark"] #projectCarousel .carousel-control-prev .bi-chevron-left,
+[data-bs-theme="dark"] #projectCarousel .carousel-control-next .bi-chevron-right {
+    color: #0d6efd !important; 
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 /* Style for buttons in carousel in case of hoovering */
-#projectCarousel .bi-chevron-right:hover,
-#projectCarousel .bi-chevron-left:hover {
-    color: #0d6efd; 
-    transform: scale(2.3); 
+#projectCarousel .carousel-control-prev:hover .bi-chevron-left,
+#projectCarousel .carousel-control-next:hover .bi-chevron-right {
+    color: #0d6efd !important; 
+    transform: scale(2.3);
+    transition: transform 0.2s ease;
 }
 
 /* Style for the contact form */
@@ -320,11 +338,38 @@ main {
 
 /* Style for the social icons */
 .social-icons-contact a {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     margin: 0 5px;
     color: #000000; 
     transition: color 0.3s ease;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure all icon fonts have consistent sizing */
+.social-icons-contact i {
+    font-size: inherit;
+    line-height: 1;
+    vertical-align: middle;
+    width: 1em;
+    height: 1em;
+}
+
+/* Specific fix for Academicons */
+.social-icons-contact .ai {
+    font-size: 2.2rem;
+}
+
+/* Scale down Bootstrap Icons to match Academicons */
+.social-icons-contact .bi {
+    font-size: 1.94rem;
+}
+
+/* Adjust GitHub icon vertical alignment */
+.social-icons-contact .bi-github {
+    vertical-align: -0.15em;
 }
 
 /* Style for the social icons in the dark mode */
@@ -341,7 +386,25 @@ main {
 .social-icons-contact {
     text-align: center;
     margin-bottom: 10px;
-    padding-top: 20px; 
+    padding: 1rem;
+    background-color: #ffffff;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Dark mode style for social icons container */
+[data-bs-theme="dark"] .social-icons-contact {
+    background-color: #000000;
+}
+
+/* Style for email text inside social icons container */
+.social-icons-contact p {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    text-align: center !important;
+    background: transparent !important;
 }
 
 /* Style for the theme toggler button */
@@ -396,14 +459,30 @@ main {
     margin: 0 auto
 }
 
+/* Make profile content row use flexbox */
+#about .profile-content {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+/* Style the left column to vertically center content */
+#about .profile-content > .col-lg-4 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 0;
+}
+
 /* Style for the image frame at the aboutMe page */
 #about .img-fluid.rounded-circle {
     aspect-ratio: 1/1;
     object-fit: cover;
     object-position: center;
-    margin: 0 auto 1.5rem auto;
+    margin: 0 auto 0.5rem auto;
     display: block;
     transition: all 0.3s ease;
+    max-width: 100%;
+    height: auto;
 }
 
 /* Style for the error message for the form */
@@ -485,29 +564,25 @@ main {
     background-image: none !important; /* Remove the tick/checkmark icon on focus */
 }
 
-/* Responsive design for the Image at about me page*/
-@container (max-width: 599px) {
-  #about .img-fluid.rounded-circle {
-    width: 240px;
-    height: 240px;
+/* Responsive design for the Image at about me page - only for mobile/tablet */
+@media (max-width: 992px) {
+  @container (max-width: 599px) {
+    #about .img-fluid.rounded-circle {
+      width: 240px;
+      height: 240px;
+    }
   }
-}
-@container (min-width: 600px) and (max-width: 799px) {
-  #about .img-fluid.rounded-circle {
-    width: 280px;
-    height: 280px;
+  @container (min-width: 600px) and (max-width: 799px) {
+    #about .img-fluid.rounded-circle {
+      width: 280px;
+      height: 280px;
+    }
   }
-}
-@container (min-width: 800px) and (max-width: 999px) {
-  #about .img-fluid.rounded-circle {
-    width: 320px;
-    height: 320px;
-  }
-}
-@container (min-width: 1000px) {
-  #about .img-fluid.rounded-circle {
-    width: 350px;
-    height: 350px;
+  @container (min-width: 800px) {
+    #about .img-fluid.rounded-circle {
+      width: 320px;
+      height: 320px;
+    }
   }
 }
 
@@ -748,6 +823,28 @@ main {
   }
 }
 
+/* Desktop-specific fixes for About page - match image+icons height to paragraph */
+@media (min-width: 993px) {
+    #about .profile-content > .col-lg-4 {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    #about .img-fluid.rounded-circle {
+        width: 280px !important;
+        height: 280px !important;
+        max-width: 280px;
+        max-height: 280px;
+        margin-bottom: 0.5rem;
+        object-fit: cover;
+    }
+    
+    #about .social-icons-contact {
+        margin-top: 0;
+    }
+}
+
 /* Mobile-specific fixes for About page */
 @media (max-width: 992px) {
     #about p {
@@ -756,8 +853,12 @@ main {
         margin-right: auto;
     }
     
+    #about .profile-content > .col-lg-4 {
+        margin-bottom: 2rem;
+    }
+    
     #about .social-icons-contact {
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
     }
     
     /* Add more space between the title and content on smaller screens */
@@ -774,7 +875,7 @@ main {
 @media (max-width: 576px) {
     #about .img-fluid.rounded-circle {
         max-width: 70%;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
     }
     
     #about p {
@@ -816,4 +917,157 @@ main {
 .link:hover {
     /* text-decoration: underline; */
     color: #0d6efd;
+}
+
+/* Styling for hyperlinks inside paragraphs */
+p a {
+    color: #0d6efd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+p a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* Dark mode for links in paragraphs */
+[data-bs-theme="dark"] p a {
+    color: #0d6efd;
+}
+
+[data-bs-theme="dark"] p a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* Publications List Styling */
+.publications-list {
+    max-width: 900px;
+    margin: 2rem auto 0 auto;
+    padding: 0 20px;
+}
+
+.publications-list ol {
+    counter-reset: publication-counter;
+    list-style: none;
+    padding-left: 0;
+}
+
+.publications-list ol li {
+    counter-increment: publication-counter;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-left: 2.5rem;
+    line-height: 1.6;
+    background: rgb(255, 255, 255);
+    padding: 1rem 1rem 1rem 2.5rem;
+    color: #000000;
+}
+
+.publications-list ol li::before {
+    content: counter(publication-counter) ".";
+    position: absolute;
+    left: 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #000000;
+}
+
+.publications-list ol li strong {
+    font-size: 1.05rem;
+}
+
+.publications-list ol li a {
+    color: #0d6efd;
+    text-decoration: none;
+    margin-right: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.publications-list ol li a:hover {
+    color: #0a58ca;
+    text-decoration: underline;
+}
+
+/* Dark mode for publications */
+[data-bs-theme="dark"] .publications-list ol li {
+    background: rgb(0, 0, 0);
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .publications-list ol li::before {
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .publications-list ol li a {
+    color: #0d6efd;
+}
+
+[data-bs-theme="dark"] .publications-list ol li a:hover {
+    color: #0a58ca;
+}
+
+/* CV Section Styling */
+.cv-section {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0;
+}
+
+.cv-viewer-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgb(255, 255, 255);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 210 / 297; /* A4 aspect ratio (8.27 × 11.7 inches) */
+}
+
+.cv-viewer {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    object-fit: fill;
+    min-height: 100%;
+}
+
+.cv-download {
+    margin-top: 1.5rem;
+}
+
+.cv-section .btn {
+    font-size: 1.1rem;
+    padding: 0.75rem 2rem;
+}
+
+.cv-section .btn i {
+    margin-right: 0.5rem;
+}
+
+.cv-download-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Dark mode for CV section */
+[data-bs-theme="dark"] .cv-viewer-container {
+    background: rgb(50, 50, 50);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive CV viewer */
+@media (max-width: 768px) {
+    .cv-viewer-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .cv-viewer-container {
+        max-width: 100%;
+    }
 }
