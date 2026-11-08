@@ -3,7 +3,7 @@
  *
  * - Theme toggle (saved choice > system preference), kept in sync with the OS
  * - Navigation: liquid indicator under the active link, scroll spy, mobile menu
- * - Liquid-glass details: pointer-following sheen, SVG refraction where supported
+ * - Liquid glass: SVG refraction where supported
  * - Reveal-on-scroll
  * - Fractal tree background with a growth animation
  *
@@ -171,25 +171,6 @@
         if (brands.some((b) => /Chromium/i.test(b.brand))) {
             root.classList.add('supports-refraction');
         }
-
-        // Specular highlight follows the pointer (mouse / trackpad only)
-        if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-        let pending = null;
-        let frame = 0;
-
-        document.addEventListener('pointermove', (e) => {
-            pending = e;
-            if (frame) return;
-            frame = requestAnimationFrame(() => {
-                frame = 0;
-                const target = pending.target.closest && pending.target.closest('.glass, .glass-btn');
-                if (!target) return;
-                const rect = target.getBoundingClientRect();
-                target.style.setProperty('--mx', ((pending.clientX - rect.left) / rect.width * 100).toFixed(1) + '%');
-                target.style.setProperty('--my', ((pending.clientY - rect.top) / rect.height * 100).toFixed(1) + '%');
-            });
-        }, { passive: true });
     }
 
     /* ------------------------------------------------------------------ */
