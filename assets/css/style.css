@@ -338,30 +338,10 @@ p a:hover {
     transition: color 0.25s ease;
 }
 
+/* Active section and hover are shown by colour alone */
 .nav-link:hover,
 .nav-link.active {
-    color: var(--text);
-}
-
-/* The "liquid" bubble that slides under the active link */
-.nav-indicator {
-    position: absolute;
-    z-index: 0;
-    top: 4px;
-    left: 0;
-    height: calc(100% - 8px);
-    width: 0;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--glass-tint-strong), var(--glass-tint));
-    box-shadow:
-        inset 0 1px 0 var(--glass-edge),
-        inset 0 -1px 0 var(--glass-edge-low),
-        0 4px 14px -6px rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    transition:
-        transform 0.5s cubic-bezier(.3, 1.4, .5, 1),
-        width 0.5s cubic-bezier(.3, 1.4, .5, 1),
-        opacity 0.3s ease;
+    color: var(--accent);
 }
 
 .nav-actions {
@@ -773,14 +753,6 @@ p a:hover {
         color: var(--text);
     }
 
-    .nav-link.active {
-        background: var(--glass-tint-strong);
-        box-shadow: inset 0 1px 0 var(--glass-edge);
-    }
-
-    .nav-indicator {
-        display: none;
-    }
 }
 
 @media (max-width: 600px) {

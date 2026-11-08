@@ -2,7 +2,7 @@
  * Personal site — interactions
  *
  * - Theme toggle (saved choice > system preference), kept in sync with the OS
- * - Navigation: liquid indicator under the active link, scroll spy, mobile menu
+ * - Navigation: scroll spy (active link in blue), mobile menu
  * - Liquid glass: SVG refraction where supported
  * - Reveal-on-scroll
  * - Fractal tree background with a growth animation
@@ -70,21 +70,12 @@
         const nav = document.getElementById('nav');
         const menuBtn = document.getElementById('menu-toggle');
         const linksBox = document.getElementById('nav-links');
-        const indicator = linksBox.querySelector('.nav-indicator');
         const links = Array.from(linksBox.querySelectorAll('.nav-link'));
         const sections = links
             .map((link) => document.querySelector(link.getAttribute('href')))
             .filter(Boolean);
 
         let activeId = '';
-
-        function moveIndicator() {
-            const active = links.find((l) => l.classList.contains('active'));
-            if (!active || !indicator) return;
-            indicator.style.width = active.offsetWidth + 'px';
-            indicator.style.transform = 'translateX(' + active.offsetLeft + 'px)';
-            indicator.style.opacity = '1';
-        }
 
         function setActive(id) {
             if (!id || id === activeId) return;
@@ -95,7 +86,6 @@
                 if (on) link.setAttribute('aria-current', 'true');
                 else link.removeAttribute('aria-current');
             });
-            moveIndicator();
         }
 
         // Scroll spy: the section crossing the middle of the viewport is active
@@ -124,8 +114,6 @@
         }, { passive: true });
 
         updateFromScroll();
-        window.addEventListener('resize', moveIndicator);
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
 
         // Mobile menu
         function setMenu(open) {
