@@ -103,12 +103,49 @@
             setActive(current);
         }
 
+        // While the page auto-scrolls to a clicked section, pause the scroll spy so only
+        // the clicked link is highlighted. It resumes when the scroll settles, or as soon
+        // as the visitor scrolls by hand (wheel, touch or keys).
+        let spyPaused = false;
+        let idleTimer = 0;
+        let maxTimer = 0;
+
+        function resumeSpy() {
+            spyPaused = false;
+            clearTimeout(idleTimer);
+            clearTimeout(maxTimer);
+        }
+
+        function waitForScrollToSettle() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(resumeSpy, 150);
+        }
+
+        function pauseSpy() {
+            spyPaused = true;
+            clearTimeout(maxTimer);
+            maxTimer = setTimeout(resumeSpy, 4000); // safety net if the scroll never reports its end
+            waitForScrollToSettle();
+        }
+
+        window.addEventListener('scrollend', () => { if (spyPaused) resumeSpy(); });
+        ['wheel', 'touchstart'].forEach((type) => {
+            window.addEventListener(type, () => { if (spyPaused) resumeSpy(); }, { passive: true });
+        });
+        window.addEventListener('keydown', (e) => {
+            if (spyPaused && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) resumeSpy();
+        });
+
         let ticking = false;
         window.addEventListener('scroll', () => {
+            if (spyPaused) {
+                waitForScrollToSettle();
+                return;
+            }
             if (ticking) return;
             ticking = true;
             requestAnimationFrame(() => {
-                updateFromScroll();
+                if (!spyPaused) updateFromScroll();
                 ticking = false;
             });
         }, { passive: true });
@@ -128,7 +165,10 @@
             setMenu(!nav.classList.contains('open'));
         });
 
-        links.forEach((link) => link.addEventListener('click', () => {
+        // In-page links in the header (sections and the name): highlight the target right
+        // away and keep the spy quiet during the automatic scroll
+        nav.querySelectorAll('a[href^="#"]').forEach((link) => link.addEventListener('click', () => {
+            pauseSpy();
             setActive(link.getAttribute('href').slice(1));
             setMenu(false);
         }));
