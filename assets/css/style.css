@@ -544,12 +544,6 @@ p a:hover {
     color: var(--text);
 }
 
-.hero-actions {
-    margin-top: 26px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
 
 /* ---------- Publications ---------- */
 .pub-list {
@@ -743,9 +737,6 @@ p a:hover {
         text-align: center;
     }
 
-    .hero-actions {
-        justify-content: center;
-    }
 
     .bio p {
         text-align: left;
