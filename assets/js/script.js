@@ -250,6 +250,30 @@
         }
         const shape = randomShape();
         const shapes = [shape, shape];
+        const OVERSHOOT = 40;      // the crown always reaches this far past the top of the screen
+
+        // Height of a fully grown tree, in units of its trunk length (the shape scales
+        // linearly with the trunk), so the trunk can be sized to fit the space available.
+        function crownHeight(shape) {
+            let top = 0;
+            (function walk(x1, y1, length, angle, depth) {
+                if (depth >= MAX_DEPTH) return;
+                const x2 = x1 + length * Math.cos(angle);
+                const y2 = y1 + length * Math.sin(angle);
+                top = Math.min(top, y2);
+                const next = length * shape.branchRatio;
+                walk(x2, y2, next, angle + shape.mainAngle, depth + 1);
+                walk(x2, y2, next, angle - shape.mainAngle, depth + 1);
+                if (depth > 1) {
+                    const xb = x1 + length * shape.extraSplit * Math.cos(angle);
+                    const yb = y1 + length * shape.extraSplit * Math.sin(angle);
+                    walk(xb, yb, next * 0.6, angle + shape.mainAngle, depth + 2);
+                    walk(xb, yb, next * 0.6, angle - shape.mainAngle, depth + 2);
+                }
+            })(0, 0, 1, -Math.PI / 2, 0);
+            return -top;
+        }
+        const unitHeight = crownHeight(shape);
 
         let width = 0;
         let height = 0;
@@ -314,9 +338,11 @@
             ctx.lineCap = 'round';
             const inset = Math.min(50, width * 0.08);
             const starts = [inset, width - inset];
+            // The trees must always grow past the top of the visible page (behind the header),
+            // so the end of the crown is never visible
+            const minTrunk = (canvas.getBoundingClientRect().bottom + OVERSHOOT) / unitHeight;
             shapes.forEach((shape, i) => {
-                // Trunk scales with height, capped by width so both crowns fit on phones
-                const trunk = Math.min(height * shape.lengthFactor, width * 0.32);
+                const trunk = Math.max(height * shape.lengthFactor, minTrunk);
                 branch(shape, starts[i], height, trunk, -Math.PI / 2, 0, growth);
             });
         }
@@ -368,14 +394,15 @@
         resize();
         grow();
 
-        // Redraw at full size on resize; ignore height-only jitter from mobile browser bars
+        // Redraw at full size whenever the window size changes. (The canvas uses 100lvh,
+        // so mobile browser bars appearing or hiding don't resize it.)
         let lastW = width;
         let lastH = height;
         let resizeFrame = 0;
         window.addEventListener('resize', () => {
             cancelAnimationFrame(resizeFrame);
             resizeFrame = requestAnimationFrame(() => {
-                if (canvas.clientWidth === lastW && Math.abs(canvas.clientHeight - lastH) < 120) return;
+                if (canvas.clientWidth === lastW && canvas.clientHeight === lastH) return;
                 cancelAnimationFrame(growFrame);
                 growing = false;
                 resize();

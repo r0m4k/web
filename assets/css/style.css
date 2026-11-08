@@ -234,6 +234,10 @@ p a:hover {
     -webkit-tap-highlight-color: transparent;
 }
 
+.icon-btn:focus-visible {
+    border-radius: 50%; /* keyboard focus ring follows the round icon */
+}
+
 .icon-btn:hover {
     color: var(--accent);
     transform: translateY(-1px);
