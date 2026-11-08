@@ -230,7 +230,8 @@
         const ctx = canvas.getContext('2d');
 
         const MAX_DEPTH = 10;
-        const GROW_MS = 1400;
+        const GROW_MS = 2200;      // time for the trees to grow in
+        const RECOLOR_MS = 400;    // matches the page background's theme transition
 
         // Two identical trees, one from each bottom corner. They share one random
         // shape, chosen once per visit; size is derived from the viewport on every draw.
@@ -247,11 +248,18 @@
 
         let width = 0;
         let height = 0;
-        let color = '';
+        let color = [0, 0, 0, 0.4];   // r, g, b, a
         let growFrame = 0;
+        let growing = false;          // true while the grow-in animation runs
 
         function readColor() {
-            color = getComputedStyle(root).getPropertyValue('--tree').trim() || 'rgba(0,0,0,0.4)';
+            const raw = getComputedStyle(root).getPropertyValue('--tree').trim();
+            const nums = (raw.match(/[\d.]+/g) || []).map(Number);
+            return nums.length >= 3 ? [nums[0], nums[1], nums[2], nums.length > 3 ? nums[3] : 1] : [0, 0, 0, 0.4];
+        }
+
+        function rgba(c) {
+            return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + c[3].toFixed(3) + ')';
         }
 
         function resize() {
@@ -264,11 +272,15 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        function branch(shape, x1, y1, length, angle, depth, maxDepth) {
-            if (depth >= maxDepth || length < 2) return;
+        // `growth` is a continuous level count (e.g. 3.4): branches at depth 3 are drawn
+        // 40% of their length, deeper ones not yet. Each branch extends smoothly from its
+        // base, and its children start once it is fully grown.
+        function branch(shape, x1, y1, length, angle, depth, growth) {
+            if (depth >= growth || length < 2) return;
 
-            const x2 = x1 + length * Math.cos(angle);
-            const y2 = y1 + length * Math.sin(angle);
+            const f = Math.min(1, growth - depth);
+            const x2 = x1 + length * f * Math.cos(angle);
+            const y2 = y1 + length * f * Math.sin(angle);
 
             ctx.lineWidth = Math.max(0.5, length * 0.02);
             ctx.beginPath();
@@ -276,29 +288,31 @@
             ctx.lineTo(x2, y2);
             ctx.stroke();
 
+            if (f < 1) return;
+
             const next = length * shape.branchRatio;
-            branch(shape, x2, y2, next, angle + shape.mainAngle, depth + 1, maxDepth);
-            branch(shape, x2, y2, next, angle - shape.mainAngle, depth + 1, maxDepth);
+            branch(shape, x2, y2, next, angle + shape.mainAngle, depth + 1, growth);
+            branch(shape, x2, y2, next, angle - shape.mainAngle, depth + 1, growth);
 
             // Secondary "buds" part-way along the branch
             if (depth > 1) {
                 const xb = x1 + length * shape.extraSplit * Math.cos(angle);
                 const yb = y1 + length * shape.extraSplit * Math.sin(angle);
-                branch(shape, xb, yb, next * 0.6, angle + shape.mainAngle, depth + 2, maxDepth);
-                branch(shape, xb, yb, next * 0.6, angle - shape.mainAngle, depth + 2, maxDepth);
+                branch(shape, xb, yb, next * 0.6, angle + shape.mainAngle, depth + 2, growth);
+                branch(shape, xb, yb, next * 0.6, angle - shape.mainAngle, depth + 2, growth);
             }
         }
 
-        function draw(maxDepth) {
+        function draw(growth) {
             ctx.clearRect(0, 0, width, height);
-            ctx.strokeStyle = color;
+            ctx.strokeStyle = rgba(color);
             ctx.lineCap = 'round';
             const inset = Math.min(50, width * 0.08);
             const starts = [inset, width - inset];
             shapes.forEach((shape, i) => {
                 // Trunk scales with height, capped by width so both crowns fit on phones
                 const trunk = Math.min(height * shape.lengthFactor, width * 0.32);
-                branch(shape, starts[i], height, trunk, -Math.PI / 2, 0, maxDepth);
+                branch(shape, starts[i], height, trunk, -Math.PI / 2, 0, growth);
             });
         }
 
@@ -308,18 +322,44 @@
                 draw(MAX_DEPTH);
                 return;
             }
+            growing = true;
             let start = 0;
             const step = (t) => {
                 if (!start) start = t;
                 const p = Math.min((t - start) / GROW_MS, 1);
-                const eased = 1 - Math.pow(1 - p, 3);
-                draw(Math.max(1, Math.ceil(eased * MAX_DEPTH)));
+                // Gentle ease-in-out over the whole growth; each level gets a smooth slice
+                const eased = 0.5 - Math.cos(Math.PI * p) / 2;
+                draw(eased * MAX_DEPTH);
                 if (p < 1) growFrame = requestAnimationFrame(step);
+                else growing = false;
             };
             growFrame = requestAnimationFrame(step);
         }
 
-        readColor();
+        // Fade the trees to the new theme colour instead of switching instantly
+        let recolorFrame = 0;
+        function recolor() {
+            cancelAnimationFrame(recolorFrame);
+            const from = color.slice();
+            const to = readColor();
+            if (reducedMotion.matches) {
+                color = to;
+                if (!growing) draw(MAX_DEPTH);
+                return;
+            }
+            let start = 0;
+            const step = (t) => {
+                if (!start) start = t;
+                const p = Math.min((t - start) / RECOLOR_MS, 1);
+                color = from.map((v, i) => v + (to[i] - v) * p);
+                // While growing, the grow loop redraws each frame with the current colour
+                if (!growing) draw(MAX_DEPTH);
+                if (p < 1) recolorFrame = requestAnimationFrame(step);
+            };
+            recolorFrame = requestAnimationFrame(step);
+        }
+
+        color = readColor();
         resize();
         grow();
 
@@ -332,6 +372,7 @@
             resizeFrame = requestAnimationFrame(() => {
                 if (canvas.clientWidth === lastW && Math.abs(canvas.clientHeight - lastH) < 120) return;
                 cancelAnimationFrame(growFrame);
+                growing = false;
                 resize();
                 lastW = width;
                 lastH = height;
@@ -340,11 +381,7 @@
         });
 
         // Recolour (not regrow) on theme change
-        document.addEventListener('themechange', () => {
-            cancelAnimationFrame(growFrame);
-            readColor();
-            draw(MAX_DEPTH);
-        });
+        document.addEventListener('themechange', recolor);
     }
 
     /* ------------------------------------------------------------------ */
