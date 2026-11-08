@@ -223,13 +223,17 @@
         const MAX_DEPTH = 10;
         const GROW_MS = 1400;
 
-        // Random shape, chosen once per visit; size is derived from the viewport on every draw
-        const shape = {
-            branchRatio: 0.78 + (Math.random() - 0.5) * 0.05,
-            mainAngle: Math.PI / 6 + (Math.random() - 0.5) * 0.2,
-            extraSplit: 0.6 + (Math.random() - 0.5) * 0.2,
-            lengthFactor: 0.25 + Math.random() * 0.05
-        };
+        // Two trees, one from each bottom corner. Each gets its own random shape,
+        // chosen once per visit; size is derived from the viewport on every draw.
+        function randomShape() {
+            return {
+                branchRatio: 0.78 + (Math.random() - 0.5) * 0.05,
+                mainAngle: Math.PI / 6 + (Math.random() - 0.5) * 0.2,
+                extraSplit: 0.6 + (Math.random() - 0.5) * 0.2,
+                lengthFactor: 0.25 + Math.random() * 0.05
+            };
+        }
+        const shapes = [randomShape(), randomShape()];
 
         let width = 0;
         let height = 0;
@@ -250,7 +254,7 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        function branch(x1, y1, length, angle, depth, maxDepth) {
+        function branch(shape, x1, y1, length, angle, depth, maxDepth) {
             if (depth >= maxDepth || length < 2) return;
 
             const x2 = x1 + length * Math.cos(angle);
@@ -263,15 +267,15 @@
             ctx.stroke();
 
             const next = length * shape.branchRatio;
-            branch(x2, y2, next, angle + shape.mainAngle, depth + 1, maxDepth);
-            branch(x2, y2, next, angle - shape.mainAngle, depth + 1, maxDepth);
+            branch(shape, x2, y2, next, angle + shape.mainAngle, depth + 1, maxDepth);
+            branch(shape, x2, y2, next, angle - shape.mainAngle, depth + 1, maxDepth);
 
             // Secondary "buds" part-way along the branch
             if (depth > 1) {
                 const xb = x1 + length * shape.extraSplit * Math.cos(angle);
                 const yb = y1 + length * shape.extraSplit * Math.sin(angle);
-                branch(xb, yb, next * 0.6, angle + shape.mainAngle, depth + 2, maxDepth);
-                branch(xb, yb, next * 0.6, angle - shape.mainAngle, depth + 2, maxDepth);
+                branch(shape, xb, yb, next * 0.6, angle + shape.mainAngle, depth + 2, maxDepth);
+                branch(shape, xb, yb, next * 0.6, angle - shape.mainAngle, depth + 2, maxDepth);
             }
         }
 
@@ -279,10 +283,13 @@
             ctx.clearRect(0, 0, width, height);
             ctx.strokeStyle = color;
             ctx.lineCap = 'round';
-            const startX = Math.min(50, width * 0.08);
-            // Trunk scales with height, capped by width so the crown fits on phones
-            const trunk = Math.min(height * shape.lengthFactor, width * 0.5);
-            branch(startX, height, trunk, -Math.PI / 2, 0, maxDepth);
+            const inset = Math.min(50, width * 0.08);
+            const starts = [inset, width - inset];
+            shapes.forEach((shape, i) => {
+                // Trunk scales with height, capped by width so both crowns fit on phones
+                const trunk = Math.min(height * shape.lengthFactor, width * 0.32);
+                branch(shape, starts[i], height, trunk, -Math.PI / 2, 0, maxDepth);
+            });
         }
 
         function grow() {
