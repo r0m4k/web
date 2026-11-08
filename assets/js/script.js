@@ -230,7 +230,7 @@
         const ctx = canvas.getContext('2d');
 
         const MAX_DEPTH = 10;
-        const GROW_MS = 2200;      // time for the trees to grow in
+        const GROW_MS = 1470;      // time for the trees to grow in
         const RECOLOR_MS = 400;    // matches the page background's theme transition
 
         // Two identical trees, one from each bottom corner. They share one random
