@@ -151,8 +151,7 @@ p a:hover {
    3. a bright specular rim on top, darker rim below (inset shadows),
    4. a fixed soft sheen (::before) in the top-left corner.
 */
-.glass,
-.glass-btn {
+.glass {
     position: relative;
     isolation: isolate;
     background:
@@ -176,8 +175,7 @@ p a:hover {
 }
 
 /* Specular sheen: a fixed radial highlight */
-.glass::before,
-.glass-btn::before {
+.glass::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -214,46 +212,51 @@ p a:hover {
 
 /* Fallback for browsers without backdrop-filter: make glass more opaque so text stays legible */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .glass,
-    .glass-btn {
+    .glass {
         background: color-mix(in srgb, var(--bg) 88%, transparent);
     }
 }
 
-/* Glass buttons */
-.glass-btn {
+/* Nav icon buttons (theme, menu): plain icons, no frame */
+.icon-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 1.25rem;
     color: var(--text);
-    font: inherit;
     cursor: pointer;
-    transition: transform 0.25s cubic-bezier(.2, .8, .2, 1.2), box-shadow 0.25s ease, color 0.2s ease, background-color 0.2s ease;
+    transition: color 0.2s ease, transform 0.25s cubic-bezier(.2, .8, .2, 1.2);
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Hover effects live on buttons only; glass panels and cards stay still */
-.glass-btn:hover {
+.icon-btn:hover {
     color: var(--accent);
-    transform: translateY(-1px) scale(1.03);
+    transform: translateY(-1px);
 }
 
-.glass-btn:active {
-    transform: scale(0.97);
+/* Text links with an icon (Paper, Code, GitHub, Article): no frame */
+.link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    transition: color 0.2s ease;
 }
 
-/* Sheen follows the pointer on buttons (JS sets --mx/--my) */
-.glass-btn::before {
-    background: radial-gradient(120% 80% at var(--mx, 20%) var(--my, 0%), var(--sheen), transparent 55%);
+.link-btn i {
+    font-size: 1.05rem;
 }
 
-.icon-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    font-size: 1.1rem;
-    padding: 0;
+.link-btn:hover {
+    color: var(--accent);
 }
 
 /* ---------- Navigation ---------- */
@@ -488,28 +491,8 @@ p a:hover {
     transform: translateY(-2px);
 }
 
-.social {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    font-size: 1.3rem;
-}
 
-/* Same button with a text label (CV): keeps the height and radius, grows in width */
-.social--label {
-    width: auto;
-    padding: 0 18px 0 14px;
-    gap: 8px;
-}
 
-.social--label span {
-    font-size: 0.98rem;
-    font-weight: 600;
-}
-
-.social .ai {
-    font-size: 1.4rem;
-}
 
 .email {
     margin: 0;
@@ -588,10 +571,10 @@ p a:hover {
 }
 
 .pub-links {
-    margin-top: 14px;
+    margin-top: 12px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px 20px;
 }
 
 /* ---------- Projects ---------- */
@@ -652,7 +635,7 @@ p a:hover {
 .project-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px 20px;
 }
 
 /* Award line above a project title, e.g. a hackathon win */
