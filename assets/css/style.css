@@ -204,9 +204,10 @@ p a:hover {
 }
 
 /* Real refraction of what's behind (Chromium supports SVG filters in backdrop-filter).
-   The header and the main-page cards share the same treatment. */
+   The header and the main-page cards share the same treatment. The CV card is left
+   out: Chrome bleeds the SVG filter into the embedded PDF viewer and blurs the CV. */
 .supports-refraction .glass-refract,
-.supports-refraction #main .glass {
+.supports-refraction #main .glass:not(.cv-card) {
     -webkit-backdrop-filter: url(#liquid-refraction) blur(14px) saturate(var(--glass-sat));
     backdrop-filter: url(#liquid-refraction) blur(14px) saturate(var(--glass-sat));
 }
