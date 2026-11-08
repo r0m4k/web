@@ -411,15 +411,6 @@ p a:hover {
     margin-bottom: 28px;
 }
 
-.eyebrow {
-    margin: 0 0 6px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-}
-
 .section-title {
     margin: 0;
     font-size: clamp(2rem, 4vw, 2.75rem);
