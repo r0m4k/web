@@ -226,7 +226,23 @@ p a:hover {
     color: var(--text);
     font: inherit;
     cursor: pointer;
+    transition: transform 0.25s cubic-bezier(.2, .8, .2, 1.2), box-shadow 0.25s ease, color 0.2s ease, background-color 0.2s ease;
     -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover effects live on buttons only; glass panels and cards stay still */
+.glass-btn:hover {
+    color: var(--accent);
+    transform: translateY(-1px) scale(1.03);
+}
+
+.glass-btn:active {
+    transform: scale(0.97);
+}
+
+/* Sheen follows the pointer on buttons (JS sets --mx/--my) */
+.glass-btn::before {
+    background: radial-gradient(120% 80% at var(--mx, 20%) var(--my, 0%), var(--sheen), transparent 55%);
 }
 
 .icon-btn {
@@ -259,6 +275,11 @@ p a:hover {
     color: #fff;
     background: var(--accent);
     border-color: var(--accent);
+}
+
+.pill-btn.primary:hover {
+    color: #fff;
+    background: var(--accent-strong);
 }
 
 /* ---------- Navigation ---------- */
