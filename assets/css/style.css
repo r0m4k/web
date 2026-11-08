@@ -256,35 +256,6 @@ p a:hover {
     padding: 0;
 }
 
-.pill-btn {
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    line-height: 1;
-}
-
-/* Pill buttons are links, so their text uses the link blue */
-.pill-btn:not(.primary) {
-    color: var(--accent);
-}
-
-.pill-btn.sm {
-    padding: 8px 14px;
-    font-size: 0.85rem;
-}
-
-.pill-btn.primary {
-    color: #fff;
-    background: var(--accent);
-    border-color: var(--accent);
-}
-
-.pill-btn.primary:hover {
-    color: #fff;
-    background: var(--accent-strong);
-}
-
 /* ---------- Navigation ---------- */
 .nav-wrap {
     position: fixed;
