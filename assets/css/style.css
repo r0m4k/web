@@ -10,8 +10,8 @@
     --bg: #eef1f7;
     --text: #0e1220;
     --text-soft: #4a5268;
-    --accent: #2f62ff;
-    --accent-strong: #1d47d6;
+    --accent: #0071e3;
+    --accent-strong: #0077ed;
     --tree: rgba(20, 28, 52, 0.42);
 
     /* Glass */
@@ -24,12 +24,6 @@
     --glass-sat: 175%;
     --sheen: rgba(255, 255, 255, 0.55);
 
-    /* Background colour fields */
-    --orb-1: #7aa2ff;
-    --orb-2: #c79bff;
-    --orb-3: #6fe0d2;
-    --orb-4: #ffb88a;
-    --orb-opacity: 0.55;
 
     --radius-lg: 32px;
     --radius: 22px;
@@ -40,8 +34,8 @@
     --bg: #07080d;
     --text: #eef1fa;
     --text-soft: #a3abc2;
-    --accent: #8aa8ff;
-    --accent-strong: #b3c6ff;
+    --accent: #0071e3;
+    --accent-strong: #2997ff;
     --tree: rgba(220, 230, 255, 0.34);
 
     --glass-tint: rgba(255, 255, 255, 0.06);
@@ -51,11 +45,6 @@
     --glass-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.75), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
     --sheen: rgba(255, 255, 255, 0.16);
 
-    --orb-1: #2a4dff;
-    --orb-2: #7b2cff;
-    --orb-3: #00a99a;
-    --orb-4: #ff6a3d;
-    --orb-opacity: 0.32;
 }
 
 /* ---------- Base ---------- */
@@ -142,32 +131,6 @@ p a:hover {
 }
 
 /* ---------- Background ---------- */
-.backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(70px);
-    opacity: var(--orb-opacity);
-    transition: opacity 0.6s ease, background-color 0.6s ease;
-    will-change: transform;
-}
-
-.orb-1 { width: 46vmax; height: 46vmax; top: -14vmax; right: -10vmax; background: var(--orb-1); animation: drift-1 28s ease-in-out infinite alternate; }
-.orb-2 { width: 38vmax; height: 38vmax; top: 30vh;  left: -14vmax; background: var(--orb-2); animation: drift-2 34s ease-in-out infinite alternate; }
-.orb-3 { width: 32vmax; height: 32vmax; bottom: -12vmax; right: 8vw; background: var(--orb-3); animation: drift-3 30s ease-in-out infinite alternate; }
-.orb-4 { width: 22vmax; height: 22vmax; top: 18vh; left: 42vw; background: var(--orb-4); opacity: calc(var(--orb-opacity) * 0.7); animation: drift-1 38s ease-in-out infinite alternate-reverse; }
-
-@keyframes drift-1 { to { transform: translate(-8vw, 10vh) scale(1.08); } }
-@keyframes drift-2 { to { transform: translate(10vw, -8vh) scale(0.92); } }
-@keyframes drift-3 { to { transform: translate(-12vw, -6vh) scale(1.1); } }
-
 #fractal-tree-canvas {
     position: fixed;
     left: 0;
@@ -299,20 +262,13 @@ p a:hover {
 
 .pill-btn.primary {
     color: #fff;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 92%, #fff), color-mix(in srgb, var(--accent) 80%, #000));
-    border-color: color-mix(in srgb, var(--accent) 60%, #fff);
-}
-
-:root[data-theme="dark"] .pill-btn.primary {
-    color: #0b1020;
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 .pill-btn.primary:hover {
     color: #fff;
-}
-
-:root[data-theme="dark"] .pill-btn.primary:hover {
-    color: #0b1020;
+    background: var(--accent-strong);
 }
 
 /* ---------- Navigation ---------- */
@@ -601,10 +557,7 @@ p a:hover {
     font-weight: 800;
     letter-spacing: -0.04em;
     line-height: 1.2;
-    background: linear-gradient(160deg, var(--accent), color-mix(in srgb, var(--accent) 30%, var(--text-soft)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--accent);
 }
 
 .pub-title {
