@@ -8,8 +8,9 @@
     --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
     --bg: #eef1f7;
-    --text: #0e1220;
-    --text-soft: #4a5268;
+    /* Text is pure black / white; only links and labels use the accent blue */
+    --text: #000000;
+    --text-soft: #000000;
     --accent: #0071e3;
     --accent-strong: #0077ed;
     --tree: rgba(20, 28, 52, 0.42);
@@ -32,8 +33,8 @@
 
 :root[data-theme="dark"] {
     --bg: #07080d;
-    --text: #eef1fa;
-    --text-soft: #a3abc2;
+    --text: #ffffff;
+    --text-soft: #ffffff;
     --accent: #0071e3;
     --accent-strong: #2997ff;
     --tree: rgba(220, 230, 255, 0.34);
@@ -85,7 +86,7 @@ a {
 }
 
 a:hover {
-    color: var(--accent-strong);
+    color: var(--accent);
 }
 
 p a:hover {
@@ -253,6 +254,11 @@ p a:hover {
     font-weight: 600;
     font-size: 0.95rem;
     line-height: 1;
+}
+
+/* Pill buttons are links, so their text uses the link blue */
+.pill-btn:not(.primary) {
+    color: var(--accent);
 }
 
 .pill-btn.sm {
