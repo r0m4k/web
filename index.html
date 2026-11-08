@@ -3,293 +3,265 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Page name -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Roman Dolgopolyi</title>
-    <!-- Favicon -->
+    <meta name="description" content="Roman Dolgopolyi — researcher in Explainable AI. Publications, projects and CV.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#eef1f7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#07080d" media="(prefers-color-scheme: dark)">
     <link rel="icon" href="assets/Images/favicon.ico" type="image/x-icon">
 
-    <!-- LOAD OF ALL NECESSARY SCRIPT FILES-->
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- Bootstrap default JS  -->
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script defer src="assets/js/script.js"></script>
-
-    <!-- Script for color theme change (added here for faster load) --> 
+    <!-- Theme is set before first paint to avoid a flash: saved choice > system preference -->
     <script>
-        (function() {
-            // Determine initial theme: saved preference > system preference > default (light)
-            const savedTheme = localStorage.getItem('theme');
-            let initialTheme;
-            
-            if (savedTheme) {
-                // User has previously set a preference
-                initialTheme = savedTheme;
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                // System/device prefers dark mode
-                initialTheme = 'dark';
-            } else {
-                // Default to light mode
-                initialTheme = 'light';
-            }
-            
-            document.documentElement.setAttribute('data-bs-theme', initialTheme);
+        (function () {
+            var saved = null;
+            try { saved = localStorage.getItem('theme'); } catch (e) {}
+            var theme = saved || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.classList.add('js');
         })();
     </script>
 
-    <!-- LOAD OF ALL NECESSARY CSS FILES-->
-    <!-- Bootstrap default CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap default Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Academicons (for Google Scholar, ORCID, etc.) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-
-    <!-- LOAD OF ALL NECESSARY FONTS-->
-    <!-- Google default Fonts -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1.9.4/css/academicons.min.css">
+    <!-- Site styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script defer src="assets/js/script.js"></script>
 </head>
 
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- Load navbar with JS -->
-    <div id="navbar-placeholder"></div>
+    <!-- Background: soft colour fields + fractal tree, seen through the glass -->
+    <div class="backdrop" aria-hidden="true">
+        <span class="orb orb-1"></span>
+        <span class="orb orb-2"></span>
+        <span class="orb orb-3"></span>
+        <span class="orb orb-4"></span>
+    </div>
+    <canvas id="fractal-tree-canvas" aria-hidden="true"></canvas>
 
-    <!-- Load fractal tree canvas with JS-->
-    <canvas id="fractal-tree-canvas"></canvas>
+    <!-- SVG filter used for the liquid-glass refraction (Chromium only, progressive enhancement) -->
+    <svg class="svg-defs" aria-hidden="true" focusable="false">
+        <filter id="liquid-refraction" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="7" result="noise" />
+            <feGaussianBlur in="noise" stdDeviation="2" result="softNoise" />
+            <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="38" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
 
-    <!-- Main page container -->
-    <main class="container mt-5 pt-5 main-flush-top">
+    <!-- Navigation -->
+    <header class="nav-wrap">
+        <nav class="nav" id="nav" aria-label="Main">
+            <span class="nav-glass glass glass-refract" aria-hidden="true"></span>
+            <a class="brand" href="#about" aria-label="Roman Dolgopolyi — back to top">
+                <img src="assets/Images/logo-128.png" alt="" class="brand-logo" width="28" height="28">
+                <span>Roman Dolgopolyi</span>
+            </a>
 
-        <!-- About me section -->
-        <section id="about" class="page-section">
+            <div class="nav-links" id="nav-links">
+                <span class="nav-indicator" aria-hidden="true"></span>
+                <a class="nav-link" href="#about">About</a>
+                <a class="nav-link" href="#publications">Publications</a>
+                <a class="nav-link" href="#projects">Projects</a>
+                <a class="nav-link" href="#cv">CV</a>
+            </div>
 
-            <!-- The page title -->
-            <h2 class="section-title">About Me</h2>
+            <div class="nav-actions">
+                <button class="icon-btn glass-btn" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+                    <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                </button>
+                <button class="icon-btn glass-btn menu-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+                    <i class="bi bi-list" aria-hidden="true"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
 
-            <!-- The content of the page -->
-            <div class="row justify-content-center align-items-center profile-content" style="margin-left: 0">
+    <main id="main" class="container">
 
-                <!-- Avatar image -->
-                <div class="col-lg-4 col-md-8 col-sm-10 text-center">
-                    <img src="assets/Images/avatar.png" class="img-fluid rounded-circle" alt="Your Photo">
-                                    <!-- Links to socical accounts -->
-                    <div class="col-12 social-icons-contact">
-
-                        <!-- Google Scholar -->
-                        <a href="https://scholar.google.com/citations?user=FisClGEAAAAJ&hl=en" aria-label="Google Scholar" target="_blank">
-                            <i class="ai ai-google-scholar-square"></i>
-                        </a>
-
-                        <!-- ORCID -->
-                        <a href="https://orcid.org/0009-0002-9884-8386" aria-label="ORCID" target="_blank">
-                            <i class="ai ai-orcid-square"></i>
-                        </a>
-
-                        <!-- GitHub -->
-                        <a href="https://github.com/r0m4k" aria-label="GitHub" target="_blank">
-                            <i class="bi bi-github"></i>
-                        </a>
-
-                        <!-- LinkedIn -->
-                        <a href="https://www.linkedin.com/in/dolgopolyiroman/" aria-label="LinkedIn" target="_blank">
-                            <i class="bi bi-linkedin"></i>
-                        </a>
-
-                        <p style="text-align: justify; justify-self: center;">dolgopolyi.r {at} northeastern.edu</p>
-
-
+        <!-- About -->
+        <section id="about" class="section hero">
+            <div class="hero-card glass glass-lg reveal">
+                <div class="hero-profile">
+                    <div class="avatar-ring">
+                        <img src="assets/Images/avatar.jpg" class="avatar" alt="Portrait of Roman Dolgopolyi" width="720" height="720">
                     </div>
 
+                    <ul class="socials" aria-label="Profiles">
+                        <li><a class="social glass-btn" href="https://scholar.google.com/citations?user=FisClGEAAAAJ&hl=en" target="_blank" rel="noopener" aria-label="Google Scholar"><i class="ai ai-google-scholar" aria-hidden="true"></i></a></li>
+                        <li><a class="social glass-btn" href="https://orcid.org/0009-0002-9884-8386" target="_blank" rel="noopener" aria-label="ORCID"><i class="ai ai-orcid" aria-hidden="true"></i></a></li>
+                        <li><a class="social glass-btn" href="https://github.com/r0m4k" target="_blank" rel="noopener" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a></li>
+                        <li><a class="social glass-btn" href="https://www.linkedin.com/in/dolgopolyiroman/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a></li>
+                    </ul>
 
+                    <p class="email"><i class="bi bi-envelope" aria-hidden="true"></i> dolgopolyi.r {at} northeastern.edu</p>
                 </div>
-                
-            <!-- Bio section -->
-            <div class="col-lg-8">
-                <p style="text-align: justify">I am a researcher in Explainable AI (XAI) at <a href="https://acg150.acg.edu/initiatives/institute-for-hellenic-growth-and-prosperity/research-technology-innovation-network/artificial-intelligence-research-team/" target="_blank">The AI Lab</a> at The American College of Greece, where I hold a BSc (Hons) in Cybersecurity &amp; Networking. In Fall 2026, I will be joining a PhD program with a focus on Human-Centered Explainable AI (HCXAI).</p>
-                <p style="text-align: justify">My work addresses the explainability and trustworthiness of AI systems — specifically over-reliance, non-interpretable outputs, and hallucinations in healthcare and other real-world applications.</p>
-                <p style="text-align: justify">Under the supervision of <a href="https://scholar.google.com/citations?user=YwuF-ZwAAAAJ&hl=en" target="_blank">Prof. Ioannis T. Christou</a>, I am developing computer vision models for early diagnosis of acute lymphoblastic leukemia, applying Grad-CAM to interpret and validate learned representations. Concurrently, my thesis — <em>COMPASS: Benchmarking Safety-Aware Navigation for Vision Language Models</em> — evaluates the safety-alignment of vision-language models against established guidelines.</p>
-            </div>
 
-            </div>
+                <div class="hero-text">
+                    <p class="eyebrow">Explainable AI · Human-Centered XAI</p>
+                    <h1 class="hero-title">Roman Dolgopolyi</h1>
 
-            <div id="publications">
+                    <div class="bio">
+                        <p>I am a researcher in Explainable AI (XAI) at <a href="https://acg150.acg.edu/initiatives/institute-for-hellenic-growth-and-prosperity/research-technology-innovation-network/artificial-intelligence-research-team/" target="_blank" rel="noopener">The AI Lab</a> at The American College of Greece, where I hold a BSc (Hons) in Cybersecurity &amp; Networking. In Fall 2026, I will be joining a PhD program with a focus on Human-Centered Explainable AI (HCXAI).</p>
+                        <p>My work addresses the explainability and trustworthiness of AI systems — specifically over-reliance, non-interpretable outputs, and hallucinations in healthcare and other real-world applications.</p>
+                        <p>Under the supervision of <a href="https://scholar.google.com/citations?user=YwuF-ZwAAAAJ&hl=en" target="_blank" rel="noopener">Prof. Ioannis T. Christou</a>, I am developing computer vision models for early diagnosis of acute lymphoblastic leukemia, applying Grad-CAM to interpret and validate learned representations. Concurrently, my thesis — <em>COMPASS: Benchmarking Safety-Aware Navigation for Vision Language Models</em> — evaluates the safety-alignment of vision-language models against established guidelines.</p>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a class="pill-btn glass-btn primary" href="#publications"><i class="bi bi-journal-text" aria-hidden="true"></i> Publications</a>
+                        <a class="pill-btn glass-btn" href="assets/documents/Roman-Dolgopolyi-CV.pdf" target="_blank" rel="noopener"><i class="bi bi-file-earmark-person" aria-hidden="true"></i> CV</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications -->
+        <section id="publications" class="section">
+            <header class="section-head reveal">
+                <p class="eyebrow">Research</p>
                 <h2 class="section-title">Publications</h2>
-            
-            <!-- Publications List -->
-            <div class="publications-list">
-                <ol>
-                    <!-- Publication 3 -->
-                    <li>
-                        Interpretable Machine Learning for Life Expectancy Prediction<br>
-                        <strong>R. Dolgopolyi</strong>, I. Amaslidou, and A. Margaritou<br>
-                        <em>arXiv</em>, preprint, 2025.<br>
-                        <a href="https://arxiv.org/pdf/2510.00542" target="_blank">[paper]</a> <a href="https://github.com/r0m4k/MachineLearningforLifeExpectancy" target="_blank">[code]</a>
-                    </li>
-                    
-                    <!-- Publication 4 -->
-                    <li>
-                        EEG Emotion Recognition Through Deep Learning<br>
-                        <strong>R. Dolgopolyi</strong> and A. Chatzipanagiotou<br>
-                        In <em>Proceedings of the 22nd European, Mediterranean, and Middle Eastern Conference on Information Systems (Springer)</em>, 2025.<br>
-                        <a href="https://arxiv.org/pdf/2511.15902" target="_blank">[paper]</a> <a href="https://github.com/r0m4k/EmotionRecognitionDeepLearning" target="_blank">[code]</a>
-                    </li>
+            </header>
 
-                    <!-- Publication 1 -->
-                    <li>
-                        Bridging Perception, Language, and Action: A Survey and Bibliometric Analysis of VLM & VLA Systems<br>
-                        <strong>R. Dolgopolyi</strong> and A. Tsevas<br>
-                        <em>EurIPS'25 Workshop on the Science of Benchmarking and Evaluating AI</em>, submitted for presentation, 2025.<br>
-                        <a href="https://assets-eu.researchsquare.com/files/rs-7935378/v1_covered_44dff933-1314-4ff2-be45-7a03b05e555f.pdf?c=1761576157" target="_blank">[paper]</a>
-                    </li>
-                    
-                    <!-- Publication 2 -->
-                    <li>
-                        Transparency of Autonomous Driving Algorithms<br>
-                        <strong>R. Dolgopolyi</strong><br>
-                        <em>AI and Ethics (Springer)</em>, submitted, 2025.<br>
-                        <a href="assets/documents/Transparency of Autonomous Driving Algorithms- Finding an Optimal Balance Between Developer Security and Customer Safety.pdf" target="_blank">[paper]</a>
-                    </li>
-                                        
-                </ol>
-            </div>
-            </div>
+            <ol class="pub-list">
+                <li class="pub glass reveal">
+                    <span class="pub-index" aria-hidden="true">01</span>
+                    <div class="pub-body">
+                        <h3 class="pub-title">Interpretable Machine Learning for Life Expectancy Prediction</h3>
+                        <p class="pub-authors"><strong>R. Dolgopolyi</strong>, I. Amaslidou, and A. Margaritou</p>
+                        <p class="pub-venue"><em>arXiv</em>, preprint <span class="chip">2025</span></p>
+                        <div class="pub-links">
+                            <a class="pill-btn glass-btn sm" href="https://arxiv.org/pdf/2510.00542" target="_blank" rel="noopener"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Paper</a>
+                            <a class="pill-btn glass-btn sm" href="https://github.com/r0m4k/MachineLearningforLifeExpectancy" target="_blank" rel="noopener"><i class="bi bi-code-slash" aria-hidden="true"></i> Code</a>
+                        </div>
+                    </div>
+                </li>
 
-            <div id="projects">
+                <li class="pub glass reveal">
+                    <span class="pub-index" aria-hidden="true">02</span>
+                    <div class="pub-body">
+                        <h3 class="pub-title">EEG Emotion Recognition Through Deep Learning</h3>
+                        <p class="pub-authors"><strong>R. Dolgopolyi</strong> and A. Chatzipanagiotou</p>
+                        <p class="pub-venue">In <em>Proceedings of the 22nd European, Mediterranean, and Middle Eastern Conference on Information Systems (Springer)</em> <span class="chip">2025</span></p>
+                        <div class="pub-links">
+                            <a class="pill-btn glass-btn sm" href="https://arxiv.org/pdf/2511.15902" target="_blank" rel="noopener"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Paper</a>
+                            <a class="pill-btn glass-btn sm" href="https://github.com/r0m4k/EmotionRecognitionDeepLearning" target="_blank" rel="noopener"><i class="bi bi-code-slash" aria-hidden="true"></i> Code</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="pub glass reveal">
+                    <span class="pub-index" aria-hidden="true">03</span>
+                    <div class="pub-body">
+                        <h3 class="pub-title">Bridging Perception, Language, and Action: A Survey and Bibliometric Analysis of VLM &amp; VLA Systems</h3>
+                        <p class="pub-authors"><strong>R. Dolgopolyi</strong> and A. Tsevas</p>
+                        <p class="pub-venue"><em>EurIPS'25 Workshop on the Science of Benchmarking and Evaluating AI</em>, submitted for presentation <span class="chip">2025</span></p>
+                        <div class="pub-links">
+                            <a class="pill-btn glass-btn sm" href="https://assets-eu.researchsquare.com/files/rs-7935378/v1_covered_44dff933-1314-4ff2-be45-7a03b05e555f.pdf?c=1761576157" target="_blank" rel="noopener"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Paper</a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="pub glass reveal">
+                    <span class="pub-index" aria-hidden="true">04</span>
+                    <div class="pub-body">
+                        <h3 class="pub-title">Transparency of Autonomous Driving Algorithms</h3>
+                        <p class="pub-authors"><strong>R. Dolgopolyi</strong></p>
+                        <p class="pub-venue"><em>AI and Ethics (Springer)</em>, submitted <span class="chip">2025</span></p>
+                        <div class="pub-links">
+                            <a class="pill-btn glass-btn sm" href="assets/documents/Transparency%20of%20Autonomous%20Driving%20Algorithms-%20Finding%20an%20Optimal%20Balance%20Between%20Developer%20Security%20and%20Customer%20Safety.pdf" target="_blank" rel="noopener"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Paper</a>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects" class="section">
+            <header class="section-head reveal">
+                <p class="eyebrow">Code</p>
                 <h2 class="section-title">Projects</h2>
-            
-            <!-- Projects carousel section-->
-            <div id="projectCarousel" class="carousel" data-bs-ride="false">
+            </header>
 
-                <!-- Carousel itself -->
-                <div class="carousel-inner">
-
-
-                    <!-- Project 2 of the carousel -->
-                    <div class="carousel-item">
-                        <!-- Identification of clickable card -->
-                        <a href="https://github.com/r0m4k/MachineLearningforLifeExpectancy" class="card-link text-decoration-none" target="_blank">
-                            <div class="card">
-                                <!-- Project image -->
-                                <img src="assets/Images/projects/proj4_regressionTree.png" class="card-img-top" alt="Project 1 image">
-                                <!-- Project description -->
-                                <div class="card-body">
-                                    <h5 class="card-title">Machine Learning for Life Expectancy</h5>
-                                    <p class="card-text">The project emphasizes ML models predictive performance and interpretability</p>
-                                </div>
-                            </div>
-                        </a>
+            <div class="project-grid">
+                <a class="project glass reveal" href="https://github.com/r0m4k/MachineLearningforLifeExpectancy" target="_blank" rel="noopener">
+                    <div class="project-media"><img src="assets/Images/projects/proj4_regressionTree.web.jpg" alt="Regression tree from the life-expectancy model" loading="lazy" width="960" height="497"></div>
+                    <div class="project-body">
+                        <h3 class="project-title">Machine Learning for Life Expectancy</h3>
+                        <p class="project-text">The project emphasizes ML models' predictive performance and interpretability.</p>
+                        <span class="project-cta">View on GitHub <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                     </div>
+                </a>
 
-                    <!-- Project 3 of the carousel -->
-                    <div class="carousel-item">
-                        <!-- Identification of clickable card -->
-                        <a href="https://github.com/r0m4k/LLM-Finetuning" class="card-link text-decoration-none" target="_blank">
-                            <div class="card">
-                                <!-- Project image -->
-                                <img src="assets/Images/projects/proj5_finetuning.jpg" class="card-img-top" alt="Project 2 image">
-                                <!-- Project description -->
-                                <div class="card-body">
-                                    <h5 class="card-title">LLMs - Instruction Finetuning</h5>
-                                    <p class="card-text">The project emphasizes ML models predictive performance and interpretability</p>
-                                </div>
-                            </div>
-                        </a>
+                <a class="project glass reveal" href="https://github.com/r0m4k/EmotionRecognitionDeepLearning" target="_blank" rel="noopener">
+                    <div class="project-media"><img src="assets/Images/projects/proj7_EEG.web.jpg" alt="EEG electrode layout" loading="lazy" width="532" height="506"></div>
+                    <div class="project-body">
+                        <h3 class="project-title">CNN-Transformer for EEG-based Emotion Recognition</h3>
+                        <p class="project-text">A novel approach to EEG-based emotion recognition that requires only 5 electrodes.</p>
+                        <span class="project-cta">View on GitHub <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                     </div>
+                </a>
 
-                    <!-- Project 6 of the carousel -->
-                    <div class="carousel-item">
-                        <!-- Identification of clickable card -->
-                        <a href="https://github.com/r0m4k/SpeechRecignition" class="card-link text-decoration-none" target="_blank">
-                            <div class="card">
-                                <!-- Project image -->
-                                <img src="assets/Images/projects/proj6_speechRecognition.png" class="card-img-top" alt="Project 3 image">
-                                <!-- Project description -->
-                                <div class="card-body">
-                                    <h5 class="card-title">Speech Recognition</h5>
-                                    <p class="card-text">DL based tool that tranforms videos to timestamped transcriptions</p>
-                                </div>
-                            </div>
-                        </a>
+                <a class="project glass reveal" href="https://github.com/r0m4k/LLM-Finetuning" target="_blank" rel="noopener">
+                    <div class="project-media"><img src="assets/Images/projects/proj5_finetuning.web.jpg" alt="Illustration of LLM instruction fine-tuning" loading="lazy" width="960" height="640"></div>
+                    <div class="project-body">
+                        <h3 class="project-title">LLMs — Instruction Finetuning</h3>
+                        <p class="project-text">The project emphasizes ML models' predictive performance and interpretability.</p>
+                        <span class="project-cta">View on GitHub <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                     </div>
+                </a>
 
-                    <div class="carousel-item">
-                        <!-- Identification of clickable card -->
-                        <a href="https://github.com/r0m4k/EmotionRecognitionDeepLearning" class="card-link text-decoration-none" target="_blank">
-                            <div class="card">
-                                <!-- Project image -->
-                                <img src="assets/Images/projects/proj7_EEG.png" class="card-img-top" alt="Project 4 image">
-                                <!-- Project description -->
-                                <div class="card-body">
-                                    <h5 class="card-title">CNN-Transformer for EEG-based Emotion Recognition</h5>
-                                    <p class="card-text">This project intoduces novel approach to EEG-based emotion recognition that requires only 5 electrdes</p>
-                                </div>
-                            </div>
-                        </a>
+                <a class="project glass reveal" href="https://github.com/r0m4k/SpeechRecignition" target="_blank" rel="noopener">
+                    <div class="project-media"><img src="assets/Images/projects/proj6_speechRecognition.web.jpg" alt="Speech-to-text pipeline illustration" loading="lazy" width="960" height="640"></div>
+                    <div class="project-body">
+                        <h3 class="project-title">Speech Recognition</h3>
+                        <p class="project-text">A deep-learning tool that transforms videos into timestamped transcriptions.</p>
+                        <span class="project-cta">View on GitHub <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                     </div>
+                </a>
 
-                    <!-- Project 1 of the carousel -->
-                    <div class="carousel-item">
-                        <!-- Identification of clickable card -->
-                        <a href="https://github.com/r0m4k/SenitmentAnalysis" class="card-link text-decoration-none" target="_blank">
-                            <div class="card">
-                                <!-- Project image -->
-                                <img src="assets/Images/projects/proj1_sentimentAnalysis.png" class="card-img-top" alt="Project 5 image">
-                                <!-- Project description -->
-                                <div class="card-body">
-                                    <h5 class="card-title">LLMs - Sentiment Analysis</h5>
-                                    <p class="card-text">Project that assess accuracy of LLMs in sentiment analysis tasks with zero/few shot approaches</p>
-                                </div>
-                            </div>
-                        </a>
+                <a class="project glass reveal" href="https://github.com/r0m4k/SenitmentAnalysis" target="_blank" rel="noopener">
+                    <div class="project-media"><img src="assets/Images/projects/proj1_sentimentAnalysis.web.jpg" alt="Sentiment analysis illustration" loading="lazy" width="960" height="640"></div>
+                    <div class="project-body">
+                        <h3 class="project-title">LLMs — Sentiment Analysis</h3>
+                        <p class="project-text">Assesses the accuracy of LLMs on sentiment analysis tasks with zero- and few-shot approaches.</p>
+                        <span class="project-cta">View on GitHub <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
                     </div>
-
-                </div>
-
-    
-
-                <!-- Carousel controls -->
-                <!-- Carousel left button-->
-                <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel" data-bs-slide="prev">
-                        <i class="bi bi-chevron-left"></i>
-                        <span class="visually-hidden">Previous</span>
-                </button>
-                <!-- Carousel right button-->
-                <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel" data-bs-slide="next">
-                        <i class="bi bi-chevron-right"></i>
-                        <span class="visually-hidden">Next</span>
-                </button>
+                </a>
             </div>
-            </div>
-            
+        </section>
 
-            <div id="cv">
+        <!-- CV -->
+        <section id="cv" class="section">
+            <header class="section-head reveal">
+                <p class="eyebrow">Résumé</p>
                 <h2 class="section-title">Curriculum Vitae</h2>
-                
-                <!-- CV Section Content -->
-                <div class="cv-section">
-                    <div class="cv-viewer-container">
-                        <iframe src="assets/documents/Roman-Dolgopolyi-CV.pdf" class="cv-viewer" title="Curriculum Vitae"></iframe>
-                    </div>
-                    <div class="cv-download text-center mt-3">
-                        <a href="assets/documents/Roman-Dolgopolyi-CV.pdf" class="btn btn-primary btn-sm cv-download-btn" target="_blank" download>
-                            <i class="bi bi-download"></i> Download
-                        </a>
-                    </div>
+            </header>
+
+            <div class="cv-card glass glass-lg reveal">
+                <div class="cv-frame">
+                    <iframe src="assets/documents/Roman-Dolgopolyi-CV.pdf#view=FitH" title="Curriculum Vitae of Roman Dolgopolyi" loading="lazy"></iframe>
+                </div>
+                <div class="cv-mobile">
+                    <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+                    <p>The CV opens in your device's PDF viewer.</p>
+                </div>
+                <div class="cv-actions">
+                    <a class="pill-btn glass-btn primary" href="assets/documents/Roman-Dolgopolyi-CV.pdf" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Open</a>
+                    <a class="pill-btn glass-btn" href="assets/documents/Roman-Dolgopolyi-CV.pdf" download="Roman-Dolgopolyi-CV.pdf"><i class="bi bi-download" aria-hidden="true"></i> Download</a>
                 </div>
             </div>
-            
         </section>
     </main>
 
-    <!-- Load footer with JS -->
-    <div id="footer-placeholder"></div>
-
+    <footer class="footer">
+        <p class="footer-pill glass">&copy; <span id="current-year">2026</span> Roman Dolgopolyi</p>
+    </footer>
 </body>
+
 </html>
