@@ -614,10 +614,6 @@ p a:hover {
     color: var(--text);
 }
 
-.project:hover {
-    color: var(--text);
-}
-
 .project-media {
     margin: 10px 10px 0;
     border-radius: calc(var(--radius) - 8px);
@@ -655,14 +651,29 @@ p a:hover {
     font-size: 0.94rem;
 }
 
-.project-cta {
+.project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Award line above a project title, e.g. a hackathon win */
+.award {
     align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.88rem;
+    margin: 0 0 10px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--text);
+    background: var(--glass-tint-strong);
+    box-shadow: inset 0 0 0 1px var(--glass-edge-low);
+}
+
+/* Full-bleed project image (artwork rather than a diagram on white) */
+.project-media--fill img {
+    padding: 0;
+    object-fit: cover;
 }
 
 
