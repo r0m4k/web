@@ -223,8 +223,8 @@
         const MAX_DEPTH = 10;
         const GROW_MS = 1400;
 
-        // Two trees, one from each bottom corner. Each gets its own random shape,
-        // chosen once per visit; size is derived from the viewport on every draw.
+        // Two identical trees, one from each bottom corner. They share one random
+        // shape, chosen once per visit; size is derived from the viewport on every draw.
         function randomShape() {
             return {
                 branchRatio: 0.78 + (Math.random() - 0.5) * 0.05,
@@ -233,7 +233,8 @@
                 lengthFactor: 0.25 + Math.random() * 0.05
             };
         }
-        const shapes = [randomShape(), randomShape()];
+        const shape = randomShape();
+        const shapes = [shape, shape];
 
         let width = 0;
         let height = 0;
