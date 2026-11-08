@@ -467,6 +467,27 @@ p a:hover {
     gap: 10px;
 }
 
+/* Plain clickable icons (no button frame); the 40px box keeps a comfortable tap target */
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 1.6rem;
+    color: var(--text);
+    transition: color 0.2s ease, transform 0.25s cubic-bezier(.2, .8, .2, 1.2);
+}
+
+.social-icon .ai {
+    font-size: 1.75rem;
+}
+
+.social-icon:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
 .social {
     width: 46px;
     height: 46px;
