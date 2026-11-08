@@ -509,6 +509,18 @@ p a:hover {
     font-size: 1.3rem;
 }
 
+/* Same button with a text label (CV): keeps the height and radius, grows in width */
+.social--label {
+    width: auto;
+    padding: 0 18px 0 14px;
+    gap: 8px;
+}
+
+.social--label span {
+    font-size: 0.98rem;
+    font-weight: 600;
+}
+
 .social .ai {
     font-size: 1.4rem;
 }
