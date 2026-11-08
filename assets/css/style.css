@@ -136,7 +136,7 @@ p a:hover {
     position: fixed;
     left: 0;
     bottom: 0;
-    width: 100vw;
+    width: 100%; /* not 100vw: that includes the scrollbar and shifts the trees off-centre */
     height: 100vh;
     height: 100lvh; /* stays put when mobile browser bars collapse */
     z-index: -1;
