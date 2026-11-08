@@ -40,6 +40,9 @@
 
         function apply(theme) {
             root.setAttribute('data-theme', theme);
+            // Browser UI colour (mobile address bar) follows the chosen theme, not just the OS
+            const bar = theme === 'dark' ? '#07080d' : '#eef1f7';
+            document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', bar));
             if (icon) {
                 icon.className = theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars';
                 toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
@@ -194,9 +197,11 @@
     /* Liquid glass                                                        */
     /* ------------------------------------------------------------------ */
     function initGlass() {
-        // SVG filters inside backdrop-filter currently render only in Chromium
+        // SVG filters inside backdrop-filter currently render only in Chromium. They are
+        // costly over large areas, so phones and tablets (touch-first) keep the plain blur.
         const brands = (navigator.userAgentData && navigator.userAgentData.brands) || [];
-        if (brands.some((b) => /Chromium/i.test(b.brand))) {
+        const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (finePointer && brands.some((b) => /Chromium/i.test(b.brand))) {
             root.classList.add('supports-refraction');
         }
     }
