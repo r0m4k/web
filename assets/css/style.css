@@ -71,6 +71,7 @@ body {
     background: var(--bg);
     transition: background-color 0.4s ease, color 0.4s ease;
     overflow-x: hidden;
+    overflow-x: clip; /* clips without turning body into a scroll container */
     -webkit-font-smoothing: antialiased;
 }
 
@@ -140,11 +141,14 @@ p a:hover {
 /* ---------- Background ---------- */
 #fractal-tree-canvas {
     position: fixed;
+    /* Anchored to the top, not the bottom: on phones the bottom edge of the screen moves
+       as the browser bars shrink while scrolling, and the trees would move with it. The
+       top stays put, and 100lvh (the height with the bars hidden) never changes. */
+    top: 0;
     left: 0;
-    bottom: 0;
     width: 100%; /* not 100vw: that includes the scrollbar and shifts the trees off-centre */
     height: 100vh;
-    height: 100lvh; /* stays put when mobile browser bars collapse */
+    height: 100lvh;
     z-index: -1;
     pointer-events: none;
 }
