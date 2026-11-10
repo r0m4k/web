@@ -390,26 +390,57 @@
             recolorFrame = requestAnimationFrame(step);
         }
 
-        color = readColor();
-        resize();
-        grow();
+        // iOS Safari can run this before the page is really on screen (opened from another
+        // app, or preloaded from a suggestion): the canvas then has no size yet, and a hidden
+        // page's canvas can be discarded. So the trees are (re)drawn whenever the canvas gets
+        // a real size or the page becomes visible, not only on window resize.
+        let grown = false;   // has the grow-in animation been started at a real size?
+        let lastW = 0;
+        let lastH = 0;
+        let syncFrame = 0;
 
-        // Redraw at full size whenever the window size changes. (The canvas uses 100lvh,
-        // so mobile browser bars appearing or hiding don't resize it.)
-        let lastW = width;
-        let lastH = height;
-        let resizeFrame = 0;
-        window.addEventListener('resize', () => {
-            cancelAnimationFrame(resizeFrame);
-            resizeFrame = requestAnimationFrame(() => {
-                if (canvas.clientWidth === lastW && canvas.clientHeight === lastH) return;
+        function sync(force) {
+            const w = canvas.clientWidth;
+            const h = canvas.clientHeight;
+            if (!w || !h) return;                       // not laid out yet: wait
+            const changed = w !== lastW || h !== lastH;
+            if (!grown) {
+                grown = true;
+                resize();
+                lastW = width;
+                lastH = height;
+                grow();
+                return;
+            }
+            if (!changed && !force) return;
+            if (changed) {
                 cancelAnimationFrame(growFrame);
                 growing = false;
                 resize();
                 lastW = width;
                 lastH = height;
-                draw(MAX_DEPTH);
-            });
+            }
+            if (!growing) draw(MAX_DEPTH);
+        }
+
+        function scheduleSync(force) {
+            cancelAnimationFrame(syncFrame);
+            syncFrame = requestAnimationFrame(() => sync(force));
+        }
+
+        color = readColor();
+        sync(false);
+
+        // The canvas uses 100lvh, so mobile browser bars appearing or hiding don't resize it
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(() => scheduleSync(false)).observe(canvas);
+        }
+        window.addEventListener('resize', () => scheduleSync(false));
+        window.addEventListener('load', () => scheduleSync(false));
+        // Back/forward cache restores and returning to the tab: repaint in case iOS dropped it
+        window.addEventListener('pageshow', () => scheduleSync(true));
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') scheduleSync(true);
         });
 
         // Recolour (not regrow) on theme change
